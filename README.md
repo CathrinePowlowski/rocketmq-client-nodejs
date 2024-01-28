@@ -1,313 +1,90 @@
-# RocketMQ Client for Node.js
+# Hyperapp
 
-[![Version](http://img.shields.io/npm/v/apache-rocketmq.svg)](https://www.npmjs.com/package/apache-rocketmq)
-[![Downloads](http://img.shields.io/npm/dm/apache-rocketmq.svg)](https://www.npmjs.com/package/apache-rocketmq)
-[![License](https://img.shields.io/npm/l/apache-rocketmq.svg?style=flat)](https://opensource.org/licenses/https://opensource.org/licenses/Apache-2.0)
-[![TravisCI](https://travis-ci.org/apache/rocketmq-client-nodejs.svg)](https://travis-ci.org/apache/rocketmq-client-nodejs)
-[![Dependency](https://david-dm.org/apache/rocketmq-client-nodejs.svg)](https://david-dm.org/apache/rocketmq-client-nodejs)
+> The tiny framework for building hypertext applications.
 
-This official Node.js client is a lightweight wrapper around  [rocketmq-client-cpp](https://github.com/apache/rocketmq-client-cpp), a finely tuned CPP client.
+- **Do more with less**—We have minimized the concepts you need to learn to get stuff done. Views, actions, effects, and subscriptions are all pretty easy to get to grips with and work together seamlessly.
+- **Write what, not how**—With a declarative API that's easy to read and fun to write, Hyperapp is the best way to build purely functional, feature-rich, browser-based apps using idiomatic JavaScript.
+- **Smaller than a favicon**—1 kB, give or take. Hyperapp is an ultra-lightweight Virtual DOM, [highly-optimized diff algorithm](https://javascript.plainenglish.io/javascript-frameworks-performance-comparison-2020-cd881ac21fce), and state management library obsessed with minimalism.
 
+Here's the first example to get you started. [Try it here](https://codepen.io/jorgebucaran/pen/zNxZLP?editors=1000)—no build step required!
 
-> **Notice 1:** This client is still in `dev` version. Use it cautiously in production.
+<!-- prettier-ignore -->
+```html
+<script type="module">
+  import { h, text, app } from "https://unpkg.com/hyperapp"
 
-> **Notice 2:** This SDK is now only support macOS and Ubuntu **14.04**. Ubuntu 16+ is not supported and CentOS is not tested yet.
+  const AddTodo = (state) => ({
+    ...state,
+    value: "",
+    todos: state.todos.concat(state.value),
+  })
+
+  const NewValue = (state, event) => ({
+    ...state,
+    value: event.target.value,
+  })
+
+  app({
+    init: { todos: [], value: "" },
+    view: ({ todos, value }) =>
+      h("main", {}, [
+        h("h1", {}, text("To do list")),
+        h("input", { type: "text", oninput: NewValue, value }),
+        h("ul", {},
+          todos.map((todo) => h("li", {}, text(todo)))
+        ),
+        h("button", { onclick: AddTodo }, text("New!")),
+      ]),
+    node: document.getElementById("app"),
+  })
+</script>
+
+<main id="app"></main>
+```
+
+[Check out more examples](https://codepen.io/collection/nLLvrz?grid_type=grid)
+
+The app starts by setting the initial state and rendering the view on the page. User input flows into actions, whose function is to update the state, causing Hyperapp to re-render the view.
+
+When describing how a page looks in Hyperapp, we don't write markup. Instead, we use `h()` and `text()` to create a lightweight representation of the DOM (or virtual DOM for short), and Hyperapp takes care of updating the real DOM efficiently.
 
 ## Installation
 
-```shell
-$ npm install --save apache-rocketmq
+```console
+npm install hyperapp
 ```
 
-## Examples
+## Documentation
 
-You may view [example/producer.js](https://github.com/apache/rocketmq-client-nodejs/blob/master/example/producer.js) and
-[example/push_consumer.js](https://github.com/apache/rocketmq-client-nodejs/blob/master/example/push_consumer.js) for quick start.
+Learn the basics in the [Tutorial](docs/tutorial.md), check out the [Examples](https://codepen.io/collection/nLLvrz?grid_type=grid), or visit the [Reference](docs/reference.md).
 
-## Usage
+## Packages
 
-Require this package first.
+Official packages provide access to [Web Platform](https://platform.html5.org) APIs in a way that makes sense for Hyperapp. For third-party packages and real-world examples, browse the [Hyperawesome](https://github.com/jorgebucaran/hyperawesome) collection.
 
-```javascript
-const { Producer, PushConsumer } = require("apache-rocketmq");
-```
+| Package                                        | Status                                                                                                                                              | About                                                                                                     |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [`@hyperapp/dom`](/packages/dom)               | [![npm](https://img.shields.io/npm/v/@hyperapp/dom.svg?style=for-the-badge&color=0366d6&label=)](https://www.npmjs.com/package/@hyperapp/dom)       | Inspect the DOM, focus and blur.                                                                          |
+| [`@hyperapp/svg`](/packages/svg)               | [![npm](https://img.shields.io/npm/v/@hyperapp/svg.svg?style=for-the-badge&color=0366d6&label=)](https://www.npmjs.com/package/@hyperapp/svg)       | Draw SVG with plain functions.                                                                            |
+| [`@hyperapp/html`](/packages/html)             | [![npm](https://img.shields.io/npm/v/@hyperapp/html.svg?style=for-the-badge&color=0366d6&label=)](https://www.npmjs.com/package/@hyperapp/html)     | Write HTML with plain functions.                                                                          |
+| [`@hyperapp/time`](/packages/time)             | [![npm](https://img.shields.io/npm/v/@hyperapp/time.svg?style=for-the-badge&color=0366d6&label=)](https://www.npmjs.com/package/@hyperapp/time)     | Subscribe to intervals, get the time now.                                                                 |
+| [`@hyperapp/events`](/packages/events)         | [![npm](https://img.shields.io/npm/v/@hyperapp/events.svg?style=for-the-badge&color=0366d6&label=)](https://www.npmjs.com/package/@hyperapp/events) | Subscribe to mouse, keyboard, window, and frame events.                                                   |
+| [`@hyperapp/http`](/packages/http)             | [![npm](https://img.shields.io/badge/-planned-6a737d?style=for-the-badge&label=)](https://www.npmjs.com/package/@hyperapp/http)                     | Talk to servers, make HTTP requests ([#1027](https://github.com/jorgebucaran/hyperapp/discussions/1027)). |
+| [`@hyperapp/random`](/packages/random)         | [![npm](https://img.shields.io/badge/-planned-6a737d?style=for-the-badge&label=)](https://www.npmjs.com/package/@hyperapp/random)                   | Declarative random numbers and values.                                                                    |
+| [`@hyperapp/navigation`](/packages/navigation) | [![npm](https://img.shields.io/badge/-planned-6a737d?style=for-the-badge&label=)](https://www.npmjs.com/package/@hyperapp/navigation)               | Subscribe and manage the browser URL history.                                                             |
 
-### Producer
+> Need to create your own effects and subscriptions? [You can do that too](docs/reference.md).
 
-#### Constructor
+## Help, I'm stuck!
 
-```javascript
-new Producer(groupId[, instanceName][, options]);
-```
+If you've hit a stumbling block, hop on our [Discord](https://discord.gg/eFvZXzXF9U) server to get help, and if you remain stuck, [please file an issue](https://github.com/jorgebucaran/hyperapp/issues/new), and we'll help you figure it out.
 
-`Producer`'s constructor receives three parameters:
+## Contributing
 
-+ `groupId`: the group id of the producer;
-+ `instanceName`: the instance name of the producer, **optional**;
-+ `options`: the options object, **optional**;
-  - `nameServer`: the name server of RocketMQ;
-  - `groupName`: the group name of this producer;
-  - `compressLevel`: the compress level (0-9) of this producer, default to `5` where `0` is fastest and `9` is most compressed;
-  - `sendMessageTimeout`: send message timeout millisecond, default to `3000` and suggestion is 2000 - 3000ms;
-  - `maxMessageSize`: max message size with unit (B), default to `1024 * 128` which means 128K;
-  - `logFileNum`: C++ core logic log file number, default to 3 and log file path is `$HOME/logs/rocketmq-cpp`;
-  - `logFileSize`: size of each C++ core logic log file with unit (B);
-  - `logLevel`: C++ core logic log level in `"fatal"`, `"error"`, `"warn"`, `"info"`, `"debug"`, `"trace"` and `"num"`.
+Hyperapp is free and open-source software. If you want to support Hyperapp, becoming a contributor or [sponsoring](https://github.com/sponsors/jorgebucaran) is the best way to give back. Thank you to everyone who already contributed to Hyperapp! <3
 
-e.g.
-
-```javascript
-const { Producer } = require("apache-rocketmq");
-const producer = new Producer("GROUP_ID", "INSTANCE_NAME", {
-    nameServer: "127.0.0.1:9876",
-});
-```
-
-#### start
-
-```javascript
-producer.start([callback]);
-```
-
-`.start` receives a callback function. If no callback passed, this function will return a Promise object.
-
-e.g.
-
-```javascript
-producer.start(function(err) {
-    if(err) {
-        //
-    }
-});
-
-// or
-
-producer.start().then(() => {
-    //
-}).catch(err => {
-    //
-});
-```
-
-#### shutdown
-
-```javascript
-producer.shutdown([callback]);
-```
-
-`.shutdown` receives a callback function. If no callback passed, this function will return a Promise object.
-
-e.g.
-
-```javascript
-producer.shutdown(function(err) {
-    if(err) {
-        //
-    }
-});
-
-// or
-
-producer.shutdown().then(() => {
-    //
-}).catch(err => {
-    //
-});
-```
-
-#### send
-
-```javascript
-producer.send(topic, body[, options][, callback]);
-```
-
-`.send` receives 4 parameters including a callback. If no callback passed, this function will return a Promise object.
-
-+ `topic`: the topic string;
-+ `body`: the message body string;
-+ `options`: the options object, **optional**;
-  - `keys`: the keys for this message;
-  - `tags`: the tags for this message;
-+ `callback`: the callback function, **optional**.
-
-e.g.
-
-```javascript
-producer.send("test", `baz ${i}`, {
-    keys: "foo",
-    tags: "bar"
-}, function(err, result) {
-    if(err) {
-        // ...    
-    } else {
-        console.log(result);
-
-        // console example:
-        //
-        //  { status: 0,
-        //    statusStr: 'OK',
-        //    msgId: '0101007F0000367E0000309DD68B0700',
-        //    offset: 0 }
-    }
-});
-```
-
-##### send `status` and `statusStr`
-
-| `status` | `statusStr`           |
-|----------|-----------------------|
-| `0`      | `OK`                  |
-| `1`      | `FLUSH_DISK_TIMEOUT`  |
-| `2`      | `FLUSH_SLAVE_TIMEOUT` |
-| `3`      | `SLAVE_NOT_AVAILABLE` |
-
-### PushConsumer
-
-#### Constructor
-
-```javascript
-new PushConsumer(groupId[, instanceName][, options]);
-```
-
-`PushConsumer`'s constructor receives three parameters:
-
-+ `groupId`: the group id of the push consumer;
-+ `instanceName`: the instance name of the push consumer, **optional**;
-+ `options`: the options object, **optional**;
-  - `nameServer`: the name server of RocketMQ;
-  - `threadCount`: the thread number of underlying C++ logic;
-  - `maxBatchSize`: message max batch size;
-  - `logFileNum`: C++ core logic log file number, default to 3 and log file path is `$HOME/logs/rocketmq-cpp`;
-  - `logFileSize`: size of each C++ core logic log file with unit (B);
-  - `logLevel`: C++ core logic log level in `"fatal"`, `"error"`, `"warn"`, `"info"`, `"debug"`, `"trace"` and `"num"`.
-
-e.g.
-
-```javascript
-const { PushConsumer } = require("apache-rocketmq");
-const consumer = new PushConsumer("GROUP_ID", "INSTANCE_NAME", {
-    nameServer: "127.0.0.1:9876",
-    threadCount: 3
-});
-```
-
-#### start
-
-```javascript
-consumer.start([callback]);
-```
-
-`.start` receives a callback function. If no callback passed, this function will return a Promise object.
-
-e.g.
-
-```javascript
-consumer.start(function(err) {
-    if(err) {
-        //
-    }
-});
-
-// or
-
-consumer.start().then(() => {
-    //
-}).catch(err => {
-    //
-});
-```
-
-#### shutdown
-
-```javascript
-consumer.shutdown([callback]);
-```
-
-`.shutdown` receives a callback function. If no callback passed, this function will return a Promise object.
-
-e.g.
-
-```javascript
-consumer.shutdown(function(err) {
-    if(err) {
-        //
-    }
-});
-
-// or
-
-consumer.shutdown().then(() => {
-    //
-}).catch(err => {
-    //
-});
-```
-
-#### subscribe
-
-Add a subscription relationship to consumer.
-
-```javascript
-consumer.subscribe(topic[, expression]);
-```
-
-`.subscribe` receives two parameters which the second parameter is optional.
-
-+ `topic`: The topic to be subscribed;
-+ `expression`: The additional expression to be subscribed, **optional**. e.g. `*`.
-
-#### On Message Event
-
-If you want to receive messages from RocketMQ Server, you should add a listener for `message` event which receives 2
-parameters.
-
-```javascript
-function YOUR_LISTENER(msg, ack) {
-    //
-}
-```
-
-+ `msg`: the message object to be consumed;
-+ `ack`: the Acknowledge object, which has a `.done()` function.
-
-`msg` object looks like:
-
-```javascript
-{ topic: 'test',
-  tags: 'bar',
-  keys: 'foo',
-  body: 'baz 7',
-  msgId: '0101007F0000367E0000339DD68B0800' }
-```
-
-You may call `ack.done()` to tell RocketMQ that you've finished your message successfully which is same as `ack.done(true)`. And you may call `ack.done(false)` to tell it that you've failed.
-
-e.g.
-
-```javascript
-consumer.on("message", function(msg, ack) {
-    console.log(msg);
-    ack.done();
-});
-```
-
-## Apache RocketMQ Community
-
-+ [RocketMQ Community Projects](https://github.com/apache/rocketmq-externals)
-
-## Contact Us
-
-+ Mailing Lists: https://rocketmq.apache.org/about/contact/
-+ Home: https://rocketmq.apache.org
-+ Docs: https://rocketmq.apache.org/docs/quick-start/
-+ Issues: https://github.com/apache/rocketmq-client-nodejs/issues
-+ Ask: https://stackoverflow.com/questions/tagged/rocketmq
-+ Slack: https://rocketmq-community.slack.com/
-
-## How to Contribute
-
-Contributions are warmly welcome! Be it trivial cleanup, major new feature or other suggestion. Read this [how to contribute](CONTRIBUTING.md) guide for more details.
+[![](https://opencollective.com/hyperapp/contributors.svg?width=1024&button=false)](https://github.com/jorgebucaran/hyperapp/graphs/contributors)
 
 ## License
 
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) Copyright (C) Apache Software Foundation
+[MIT](LICENSE.md)
